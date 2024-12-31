@@ -193,7 +193,7 @@ void Map::render_3D()
     float distance = quad[0].z;
 
     // Calculate brightness based on distance
-    float intensity = std::max(0.2f, 1.0f / (distance * distance)); // Fade with distance
+    float intensity = std::max(0.2f, 1.0f / (distance)); // Fade with distance
     glColor4f(0.5f, 0.5f, 0.5f, intensity);
 
     glBegin(GL_QUADS);

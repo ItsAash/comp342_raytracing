@@ -22,3 +22,11 @@ void Wall::render()
 
   glEnd();
 }
+
+Vector2 Wall::surface_normal()
+{
+  Vector2 wallStart = this->start;
+  Vector2 wallEnd = this->end;
+  Vector2 wallDirection = wallEnd - wallStart;
+  return Vector2(-wallDirection.y, wallDirection.x).normalize();
+}

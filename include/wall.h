@@ -14,6 +14,7 @@ public:
   Wall(int x1, int y1, int x2, int y2);
 
   void render();
+  Vector2 surface_normal();
 };
 
 #endif // WALL_H

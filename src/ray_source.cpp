@@ -2,24 +2,40 @@
 #include <GL/freeglut.h>
 #include <cmath>
 
-#define PI 3.141592
+RaySource::RaySource() : position(Vector2(0, 0)), walls() {}
 
-RaySource::RaySource() : position(Vector2(0, 0)), walls(nullptr) {}
+RaySource::RaySource(Vector2 pos) : position(pos), walls() {}
 
-RaySource::RaySource(Vector2 pos) : position(pos), walls(nullptr)
-{
-  generate_rays();
-}
+RaySource::RaySource(float vision_angle) : vision_angle(vision_angle) {}
 
 void RaySource::generate_rays()
 {
-  float angle_increment = (2 * PI) / NO_OF_RAYS;
+  float angle_increment = vision_angle / NO_OF_RAYS;
   for (int i = 0; i < NO_OF_RAYS; i++)
   {
-    float angle = i * angle_increment;
+    float angle = base_angle + i * angle_increment;
     rays[i] = Ray(position);
     rays[i].set_direction(angle);
   }
+}
+
+void RaySource::update_rays_angle()
+{
+  float angle_increment = vision_angle / NO_OF_RAYS;
+  for (int i = 0; i < NO_OF_RAYS; i++)
+  {
+    float angle = base_angle + i * angle_increment;
+    rays[i].set_direction(angle);
+  }
+}
+
+void RaySource::update_base_angle(float angle)
+{
+  for (int i = 0; i < NO_OF_RAYS; i++)
+  {
+    base_angle = angle;
+  }
+  update_rays_angle();
 }
 
 void RaySource::update_position(Vector2 pos)
@@ -31,29 +47,12 @@ void RaySource::update_position(Vector2 pos)
   }
 }
 
-void RaySource::render(int wall_count)
+void RaySource::render()
 {
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+  // Render each ray with smooth circular light effects
   for (int i = 0; i < NO_OF_RAYS; i++)
   {
-    rays[i].check_walls_intersect(walls, wall_count);
-
-    // Draw ray line
-    glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
-    glBegin(GL_LINES);
-    glVertex2f(rays[i].origin.x, rays[i].origin.y);
-    Vector2 endpoint = rays[i].origin + rays[i].direction.normalize() * rays[i].intersect_distance;
-    glVertex2f(endpoint.x, endpoint.y);
-    glEnd();
-
-    // Draw intersection point
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glPointSize(5.0f);
-    glBegin(GL_POINTS);
-    glVertex2f(endpoint.x, endpoint.y);
-    glEnd();
+    rays[i].check_walls_intersect(walls);
+    rays[i].show_ray_lines(true);
   }
-  glDisable(GL_BLEND);
 }

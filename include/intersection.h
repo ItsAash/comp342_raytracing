@@ -4,6 +4,7 @@
 #include "vector2.h"
 #include "wall.h"
 #include "ray.h"
+#include <optional>
 
 bool checkIntersection(const Ray &ray, const Wall &wall, Vector2 &intersectionPoint);
 

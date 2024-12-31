@@ -14,6 +14,7 @@ public:
   Vector2(float x, float y);
 
   float magnitude() const;
+  float dot(const Vector2 &other);
   Vector2 normalize() const;
   float direction() const;
   Vector2 set_magnitude(float mag) const;

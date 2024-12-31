@@ -13,6 +13,11 @@ float Vector2::magnitude() const
   return std::sqrt(x * x + y * y);
 }
 
+float Vector2::dot(const Vector2 &other)
+{
+  return this->x * other.x + this->y * other.y;
+}
+
 Vector2 Vector2::set_coordinates(float p, float q)
 {
   x = p;

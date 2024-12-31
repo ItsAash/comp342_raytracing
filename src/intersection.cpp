@@ -1,7 +1,6 @@
 #include "intersection.h"
 #include "ray.h"
 #include "wall.h"
-#include "vector2.h"
 bool checkIntersection(const Ray &ray, const Wall &wall, Vector2 &intersectionPoint)
 {
   Vector2 rayDirection = ray.direction.normalize(); // Ensure ray direction is normalized
@@ -23,6 +22,7 @@ bool checkIntersection(const Ray &ray, const Wall &wall, Vector2 &intersectionPo
   if (t >= 0 && u >= 0 && u <= 1)
   {
     intersectionPoint = ray.origin + displacement;
+
     return true;
   }
   return false; // No intersection

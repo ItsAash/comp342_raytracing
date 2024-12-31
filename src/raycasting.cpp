@@ -2,17 +2,19 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 #include "vector2.h"
 #include "wall.h"
 #include "ray_source.h"
 #include "constants.h"
 
 int mouse_x, mouse_y;
-Wall walls[NO_OF_WALLS];
+std::vector<Wall *> walls;
 RaySource source;
 
 void init()
 {
+  walls.clear();
   std::srand(std::time(0));
   glClearColor(0, 0, 0, 1.0);
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -28,11 +30,13 @@ void init()
     int y1 = std::rand() % SCREEN_HEIGHT;
     int x2 = std::rand() % SCREEN_WIDTH;
     int y2 = std::rand() % SCREEN_HEIGHT;
-    walls[i] = Wall(x1, y1, x2, y2);
+    walls.push_back(new Wall(x1, y1, x2, y2));
   }
 
   source = RaySource(Vector2(400, 300));
+  source.vision_angle = 2 * M_PI;
   source.walls = walls;
+  source.generate_rays();
 }
 
 void mouseMotion(int x, int y)
@@ -46,14 +50,14 @@ void display()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  source.update_position(Vector2(mouse_x, mouse_y));
-  source.render(NO_OF_WALLS);
-
-  for (int i = 0; i < NO_OF_WALLS; i++)
+  for (const auto &wall : walls)
   {
-    walls[i].render();
+    wall->render();
   }
+  source.update_position(Vector2(mouse_x, mouse_y));
+  source.render();
 
+  glutSwapBuffers();
   glFlush();
 }
 
